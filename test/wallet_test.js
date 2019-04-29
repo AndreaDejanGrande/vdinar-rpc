@@ -12,46 +12,19 @@ import config from './config';
  * Test instance.
  */
 
-const client = new Client(config.bitcoin);
+const client = new Client(config.vdinar);
 
 /**
  * Test `Client`.
  */
 
 describe('Single Wallet', () => {
-  before(async () => {
-    const [tip] = await client.getChainTips();
-
-    if (tip.height >= 200) {
-      return null;
-    }
-
-    await client.generate(200);
-  });
-
   describe('node-level requests', () => {
     describe('getDifficulty()', () => {
       it('should return the proof-of-work difficulty', async () => {
         const difficulty = await client.getDifficulty();
 
         difficulty.should.be.a.String();
-      });
-    });
-
-    describe('getMemoryInfo()', () => {
-      it('should return information about the node\'s memory usage', async () => {
-        const info = await client.getMemoryInfo();
-
-        info.should.have.keys('locked');
-      });
-    });
-
-    describe('listWallets()', () => {
-      it('should return a list of currently loaded wallets', async () => {
-        const client = new Client(config.bitcoin);
-        const wallets = await client.listWallets();
-
-        wallets.should.eql(['wallet.dat']);
       });
     });
   });
@@ -74,7 +47,7 @@ describe('Single Wallet', () => {
       });
 
       it('should support named parameters', async () => {
-        const client = new Client(defaults({ version: '0.15.0' }, config.bitcoin));
+        const client = new Client(defaults({ version: '2.1.0' }, config.vdinar));
 
         const mainWalletBalance = await client.getBalance({ account: '*', minconf: 0 });
         const mainWalletBalanceWithoutParameters = await client.getBalance('*', 0);
@@ -86,7 +59,7 @@ describe('Single Wallet', () => {
     });
 
     describe('getNewAddress()', () => {
-      it('should return a new bitcoin address', async () => {
+      it('should return a new vDinar address', async () => {
         await client.getNewAddress('test');
 
         const addresses = await client.getAddressesByAccount('test');
@@ -120,12 +93,11 @@ describe('Single Wallet', () => {
           value.should.have.keys(
             'account',
             'address',
-            'amount',
             'category',
+            'amount',
             'confirmations',
             'time',
-            'txid',
-            'vout'
+            'txid'
           );
         });
       });
@@ -138,13 +110,13 @@ describe('Single Wallet', () => {
           await client.sendToAddress(address, 0.1);
         }
 
-        let transactions = await new Client(defaults({ version: '0.15.0' }, config.bitcoin)).listTransactions({ account: 'test' });
+        let transactions = await new Client(defaults({ version: '2.1.0' }, config.vdinar)).listTransactions({ account: 'test' });
 
         transactions.should.be.an.Array();
         transactions.length.should.be.greaterThanOrEqual(5);
 
         // Make sure `count` is read correctly.
-        transactions = await new Client(defaults({ version: '0.15.0' }, config.bitcoin)).listTransactions({ account: 'test', count: 1 });
+        transactions = await new Client(defaults({ version: '2.1.0' }, config.vdinar)).listTransactions({ account: 'test', count: 1 });
 
         transactions.should.be.an.Array();
         transactions.should.have.length(1);
@@ -153,19 +125,8 @@ describe('Single Wallet', () => {
   });
 
   describe('batched requests', () => {
-    it('should support batched requests', async () => {
-      const batch = [
-        { method: 'listwallets' },
-        { method: 'listwallets' },
-        { method: 'listwallets' }
-      ];
-      const response = await client.command(batch);
-
-      response.should.eql([['wallet.dat'], ['wallet.dat'], ['wallet.dat']]);
-    });
-
     it('should support request parameters in batched requests', async () => {
-      const batch = [{ method: 'getnewaddress' }, { method: 'validateaddress', parameters: ['mkteeBFmGkraJaWN5WzqHCjmbQWVrPo5X3'] }];
+      const batch = [{ method: 'getnewaddress' }, { method: 'validateaddress', parameters: ['DG1KpSsSXd3uitgwHaA1i6T1Bj1hWEwAxB'] }];
 
       const [newAddress, addressValidation] = await client.command(batch);
 
@@ -174,7 +135,7 @@ describe('Single Wallet', () => {
     });
 
     it('should return an error if one of the request fails', async () => {
-      const batch = [{ method: 'validateaddress' }, { method: 'validateaddress', parameters: ['mkteeBFmGkraJaWN5WzqHCjmbQWVrPo5X3'] }];
+      const batch = [{ method: 'validateaddress' }, { method: 'validateaddress', parameters: ['DG1KpSsSXd3uitgwHaA1i6T1Bj1hWEwAxB'] }];
 
       const [validateAddressError, validateAddress] = await client.command(batch);
 

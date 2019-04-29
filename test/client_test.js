@@ -19,30 +19,19 @@ import should from 'should';
 
 describe('Client', () => {
   before(async () => {
-    const client = new Client(config.bitcoin);
-    const [tip] = await client.getChainTips();
-
-    if (tip.height >= 200) {
-      return null;
-    }
-
-    await client.generate(200);
+    const client = new Client(config.vdinar);
   });
 
   describe('constructor', () => {
     it('should throw an error if network is invalid', () => {
       try {
-        new Client(_.defaults({ network: 'foo' }, config.bitcoin)); // eslint-disable-line no-new
+        new Client(_.defaults({ network: 'foo' }, config.vdinar)); // eslint-disable-line no-new
 
         should.fail();
       } catch (error) {
         error.should.be.an.instanceOf(Error);
         error.message.should.equal('Invalid network name "foo"');
       }
-    });
-
-    it('should not have `agentOptions` set by default', () => {
-      should.not.exist(new Client().agentOptions);
     });
 
     it('should not return headers by default', () => {
@@ -58,19 +47,15 @@ describe('Client', () => {
     });
 
     it('should have default port set to `mainnet`\'s one', () => {
-      new Client().port.should.equal(8332);
+      new Client().port.should.equal(9333);
     });
 
-    it('should set default to port `8332` if network is `mainnet`', () => {
-      new Client({ network: 'mainnet' }).port.should.equal(8332);
+    it('should set default to port `9333` if network is `mainnet`', () => {
+      new Client({ network: 'mainnet' }).port.should.equal(9333);
     });
 
-    it('should set default to port `18332` if network is `testnet`', () => {
-      new Client({ network: 'testnet' }).port.should.equal(18332);
-    });
-
-    it('should set default to port `18332` if network is `regtest`', () => {
-      new Client({ network: 'regtest' }).port.should.equal(18332);
+    it('should set default to port `19333` if network is `testnet`', () => {
+      new Client({ network: 'testnet' }).port.should.equal(19333);
     });
 
     it('should not have ssl enabled by default', () => {
@@ -87,14 +72,14 @@ describe('Client', () => {
     });
 
     it('should have all the methods listed by `help`', async () => {
-      const help = await new Client(config.bitcoin).help();
+      const help = await new Client(config.vdinar).help();
 
       _.difference(parse(help), _.invokeMap(Object.keys(methods), String.prototype.toLowerCase)).should.be.empty();
     });
 
     it('should accept valid versions', async () => {
-      await new Client(_.defaults({ version: '0.15.0.1' }, config.bitcoin)).getInfo();
-      await new Client(_.defaults({ version: '0.15.0' }, config.bitcoin)).getInfo();
+      await new Client(_.defaults({ version: '2.1.0.1' }, config.vdinar)).getInfo();
+      await new Client(_.defaults({ version: '2.1.0' }, config.vdinar)).getInfo();
     });
   });
 
@@ -102,7 +87,7 @@ describe('Client', () => {
     describe('general', () => {
       it('should throw an error if timeout is reached', async () => {
         try {
-          await new Client(_.defaults({ timeout: 0.1 }, config.bitcoin)).listAccounts();
+          await new Client(_.defaults({ timeout: 0.1 }, config.vdinar)).listAccounts();
 
           should.fail();
         } catch (e) {
@@ -124,7 +109,7 @@ describe('Client', () => {
 
       it('should throw an error if a connection cannot be established', async () => {
         try {
-          await new Client(_.defaults({ port: 9897 }, config.bitcoin)).getDifficulty();
+          await new Client(_.defaults({ port: 9897 }, config.vdinar)).getDifficulty();
 
           should.fail();
         } catch (e) {
@@ -137,13 +122,13 @@ describe('Client', () => {
 
     describe('ssl', () => {
       it('should use `ssl.strict` by default when `ssl` is enabled', () => {
-        const sslClient = new Client(_.defaults({ host: config.bitcoinSsl.host, port: config.bitcoinSsl.port, ssl: true }, config.bitcoin));
+        const sslClient = new Client(_.defaults({ host: config.vdinarSsl.host, port: config.vdinarSsl.port, ssl: true }, config.vdinar));
 
         sslClient.ssl.strict.should.be.true();
       });
 
       it('should throw an error if certificate is self signed by default', async () => {
-        const sslClient = new Client(_.defaults({ host: config.bitcoinSsl.host, port: config.bitcoinSsl.port, ssl: true }, config.bitcoin));
+        const sslClient = new Client(_.defaults({ host: config.vdinarSsl.host, port: config.vdinarSsl.port, ssl: true }, config.vdinar));
 
         sslClient.ssl.strict.should.be.true();
 
@@ -167,10 +152,10 @@ describe('Client', () => {
               return;
             }
           },
-          host: config.bitcoinSsl.host,
-          port: config.bitcoinSsl.port,
+          host: config.vdinarSsl.host,
+          port: config.vdinarSsl.port,
           ssl: true
-        }, config.bitcoin));
+        }, config.vdinar));
 
         const info = await sslClient.getInfo();
 
@@ -178,7 +163,7 @@ describe('Client', () => {
       });
 
       it('should establish a connection if certificate is self signed but `ssl.strict` is disabled', async () => {
-        const sslClient = new Client(_.defaults({ host: config.bitcoinSsl.host, port: config.bitcoinSsl.port, ssl: { enabled: true, strict: false } }, config.bitcoin));
+        const sslClient = new Client(_.defaults({ host: config.vdinarSsl.host, port: config.vdinarSsl.port, ssl: { enabled: true, strict: false } }, config.vdinar));
         const info = await sslClient.getInfo();
 
         info.should.not.be.empty();
@@ -188,7 +173,7 @@ describe('Client', () => {
     describe('authentication', () => {
       it('should throw an error if credentials are invalid', async () => {
         try {
-          await new Client(_.defaults({ password: 'biz', username: 'foowrong' }, config.bitcoin)).getDifficulty();
+          await new Client(_.defaults({ password: 'biz', username: 'foowrong' }, config.vdinar)).getDifficulty();
         } catch (e) {
           e.should.be.an.instanceOf(RpcError);
           e.message.should.equal('Unauthorized');
@@ -198,7 +183,7 @@ describe('Client', () => {
       });
 
       it('should support username only authentication', async () => {
-        const difficulty = await new Client(config.bitcoinUsernameOnly).getDifficulty();
+        const difficulty = await new Client(config.vdinarUsernameOnly).getDifficulty();
 
         difficulty.should.equal(0);
       });
@@ -207,7 +192,7 @@ describe('Client', () => {
 
   describe('callbacks', () => {
     it('should support callbacks', done => {
-      new Client(config.bitcoin).help((err, help) => {
+      new Client(config.vdinar).help((err, help) => {
         should.not.exist(err);
 
         help.should.not.be.empty();

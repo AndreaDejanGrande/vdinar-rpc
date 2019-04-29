@@ -16,27 +16,21 @@ function getHost(name) {
  */
 
 const config = {
-  bitcoin: {
-    host: getHost('bitcoin-core'),
+  vdinar: {
+    host: getHost('vdinar-rpc'),
     password: 'bar',
-    port: 18443,
+    port: 19443,
     username: 'foo'
   },
-  bitcoinMultiWallet: {
-    host: getHost('bitcoin-core-multi-wallet'),
+  vdinarSsl: {
+    host: getHost('vdinar-rpc-ssl'),
     password: 'bar',
-    port: 18453,
+    port: 19453,
     username: 'foo'
   },
-  bitcoinSsl: {
-    host: getHost('bitcoin-core-ssl'),
-    password: 'bar',
-    port: 18463,
-    username: 'foo'
-  },
-  bitcoinUsernameOnly: {
-    host: getHost('bitcoin-core-username-only'),
-    port: 18473,
+  vdinarUsernameOnly: {
+    host: getHost('vdinar-rpc-username-only'),
+    port: 19463,
     username: 'foo'
   }
 };
