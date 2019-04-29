@@ -1,6 +1,6 @@
 {
   "name": "vdinar-rpc",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "A JavaScript RPC client for vDinar.",
   "keywords": [
     "vdinar",
