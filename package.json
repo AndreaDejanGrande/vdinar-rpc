@@ -1,31 +1,30 @@
 {
-  "name": "bitcoin-core",
-  "version": "2.1.0",
-  "description": "A modern Bitcoin Core REST and RPC client.",
+  "name": "vdinar-rpc",
+  "version": "0.1",
+  "description": "A JavaScript RPC client for vDinar.",
   "keywords": [
-    "bitcoin",
-    "bitcoind",
+    "vdinar",
+    "vdinard",
     "client",
     "request",
-    "rest",
     "rpc"
   ],
-  "homepage": "https://github.com/ruimarinho/bitcoin-core",
-  "bugs": "https://github.com/ruimarinho/bitcoin-core/issues",
+  "homepage": "https://github.com/AndreaDejanGrande/vdinar-rpc",
+  "bugs": "https://github.com/AndreaDejanGrande/vdinar-rpc/issues",
   "license": "MIT",
   "author": {
-    "name": "Rui Marinho",
-    "email": "ruipmarinho@gmail.com"
+    "name": "vDinar",
+    "email": "contacts@vdinar.info"
   },
   "main": "dist/src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ruimarinho/bitcoin-core.git"
+    "url": "https://github.com/AndreaDejanGrande/vdinar-rpc.git"
   },
   "scripts": {
     "changelog": "github_changelog_generator --no-issues --header-label='# Changelog' --future-release=$npm_config_future_release && sed -i '' -e :a -e '$d;N;2,4ba' -e 'P;D' CHANGELOG.md",
     "cover": "nyc --reporter=html --reporter=text npm test",
-    "dependencies": "docker-compose up -d bitcoind bitcoind-ssl bitcoind-username-only",
+    "dependencies": "docker-compose up -d vdinard vdinard-ssl vdinard-username-only",
     "lint": "eslint src test",
     "prepublish": "npm run transpile",
     "test": "NODE_ENV=test mocha $npm_package_options_mocha",
