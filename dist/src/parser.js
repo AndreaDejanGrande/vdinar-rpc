@@ -36,7 +36,7 @@ function getRpcResult(body, {
   response
 } = {}) {
   if (body.error !== null) {
-    throw new _rpcError.default(_lodash.default.get(body, 'error.code', -32603), _lodash.default.get(body, 'error.message', 'An error occurred while processing the RPC call to bitcoind'));
+    throw new _rpcError.default(_lodash.default.get(body, 'error.code', -32603), _lodash.default.get(body, 'error.message', 'An error occurred while processing the RPC call to vdinard'));
   } // Defensive measure. This should not happen on a RPC call.
 
 
@@ -103,34 +103,6 @@ class Parser {
 
     return batch;
   }
-
-  rest(extension, [response, body]) {
-    // The REST api returns a `text/plain` encoded response with the error line and the control
-    // characters \r\n. For readability and debuggability, the error message is set to this content.
-    // When requesting a binary response, the body will be returned as a Buffer representation of
-    // this error string.
-    if (response.headers['content-type'] !== 'application/json' && response.statusCode !== 200) {
-      if (body instanceof Buffer) {
-        body = body.toString('utf-8');
-      }
-
-      throw new _rpcError.default(response.statusCode, body.replace('\r\n', ''), {
-        body
-      });
-    } // Parsing the body with custom parser to support BigNumbers.
-
-
-    if (extension === 'json') {
-      body = parse(body);
-    }
-
-    if (this.headers) {
-      return [body, response.headers];
-    }
-
-    return body;
-  }
-
 }
 
 exports.default = Parser;
