@@ -12,7 +12,7 @@ sut:
   working_dir: /app
 
 vdinar-rpc:
-  image: AndreaDejanGrande/vdinar-rpc
+  image: andreadejangrande/vdinar-rpc
   command:
     -printtoconsole
     -rpcallowip=10.211.0.0/16
@@ -26,7 +26,7 @@ vdinar-rpc:
     - 19443:19443
 
 vdinar-rpc-ssl:
-  image: AndreaDejanGrande/vdinar-rpc
+  image: andreadejangrande/vdinar-rpc
   command:
     -printtoconsole
     -rpcallowip=10.211.0.0/16
@@ -45,7 +45,7 @@ vdinar-rpc-ssl:
     - 19453:19453
 
 vdinar-rpc-username-only:
-  image: AndreaDejanGrande/vdinar-rpc
+  image: andreadejangrande/vdinar-rpc
   command:
     -printtoconsole
     -rpcallowip=10.211.0.0/16
