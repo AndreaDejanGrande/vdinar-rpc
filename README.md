@@ -1,5 +1,15 @@
 # vdinar-rpc
+[![npm version][npm-image]][npm-url]
+
 A JavaScript RPC client for vDinar to execute administrative tasks, queries about the network and blockchain.
+
+## Installation
+
+Install the package via `npm`:
+
+```sh
+npm install @vdinar/vdinar-rpc --save
+```
 
 ## Usage
 ### Client(...args)
@@ -23,7 +33,7 @@ A JavaScript RPC client for vDinar to execute administrative tasks, queries abou
 The `network` will automatically determine the port to connect to, just like the `vdinard` command.
 
 ```js
-const Client = require('vdinar-rpc');
+const Client = require('@vdinar/vdinar-rpc');
 const client = new Client({ network: 'mainnet' });
 ```
 
@@ -244,3 +254,5 @@ npm version [<newversion> | major | minor | patch] -m "Release %s"
 ## License
 MIT
 
+[npm-image]: https://img.shields.io/npm/v/@vdinar/vdinar-rpc.svg
+[npm-url]: https://npmjs.org/package/@vdinar/vdinar-rpc
